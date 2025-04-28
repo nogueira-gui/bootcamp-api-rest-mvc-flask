@@ -35,6 +35,19 @@ components:
           type: string
           format: date-time
 
+    UsuarioCreate:
+      type: object
+      properties:
+        nome:
+          type: string
+        email:
+          type: string
+        senha:
+          type: string
+        perfil:
+          type: string
+          enum: [ADMIN, USER]
+
     Cliente:
       type: object
       properties:
@@ -54,6 +67,18 @@ components:
         data_atualizacao:
           type: string
           format: date-time
+
+    ClienteCreate:
+      type: object
+      properties:
+        nome:
+          type: string
+        email:
+          type: string
+        telefone:
+          type: string
+        endereco:
+          type: string
 
     Produto:
       type: object
@@ -78,6 +103,21 @@ components:
           type: string
           format: date-time
 
+    ProdutoCreate:
+      type: object
+      properties:
+        nome:
+          type: string
+        descricao:
+          type: string
+        preco:
+          type: number
+          format: float
+        quantidade_estoque:
+          type: integer
+        url_imagem:
+          type: string
+
     Pedido:
       type: object
       properties:
@@ -98,6 +138,18 @@ components:
           type: string
           format: date-time
 
+    PedidoCreate:
+      type: object
+      properties:
+        cliente_id:
+          type: integer
+        status:
+          type: string
+          enum: [PENDENTE, PROCESSANDO, ENVIADO, ENTREGUE, CANCELADO]
+        valor_total:
+          type: number
+          format: float
+
     ItemPedido:
       type: object
       properties:
@@ -105,6 +157,17 @@ components:
           type: integer
         pedido_id:
           type: integer
+        produto_id:
+          type: integer
+        quantidade:
+          type: integer
+        preco_unitario:
+          type: number
+          format: float
+
+    ItemPedidoCreate:
+      type: object
+      properties:
         produto_id:
           type: integer
         quantidade:
@@ -166,7 +229,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Usuario'
+              $ref: '#/components/schemas/UsuarioCreate'
       responses:
         '201':
           description: Usuário criado com sucesso
@@ -227,7 +290,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: '#/components/schemas/ClienteCreate'
       responses:
         '201':
           description: Cliente criado com sucesso
@@ -284,7 +347,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: '#/components/schemas/ClienteCreate'
       responses:
         '200':
           description: Cliente atualizado com sucesso
@@ -350,7 +413,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Produto'
+              $ref: '#/components/schemas/ProdutoCreate'
       responses:
         '201':
           description: Produto criado com sucesso
@@ -407,7 +470,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Produto'
+              $ref: '#/components/schemas/ProdutoCreate'
       responses:
         '200':
           description: Produto atualizado com sucesso
@@ -473,7 +536,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pedido'
+              $ref: '#/components/schemas/PedidoCreate'
       responses:
         '201':
           description: Pedido criado com sucesso
