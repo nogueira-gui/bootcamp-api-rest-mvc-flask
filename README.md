@@ -266,6 +266,7 @@ Cada usuário possui um perfil (por exemplo, **ADMIN** ou **USER**), e certas ro
 ---
 
 ## 🗂️ Diagrama Arquitetural
+Link: https://drive.google.com/file/d/1v3BSITuL5ew86Z9pxUDBlgOxIpYgMPFA/view?usp=sharing
 ![Diagrama Arquitetural](diagrama.png)
 
 ---
