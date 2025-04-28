@@ -3,6 +3,7 @@ from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from dotenv import load_dotenv
+from app.config.swagger_ui import swagger_ui_bp
 import os
 import time
 
@@ -66,6 +67,9 @@ def create_app():
     
     db.init_app(app)
     jwt.init_app(app)
+    
+    # Registra o blueprint do Swagger UI
+    app.register_blueprint(swagger_ui_bp)
     
     with app.app_context():
         if not init_db(app):

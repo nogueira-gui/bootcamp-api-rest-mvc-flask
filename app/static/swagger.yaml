@@ -1,0 +1,569 @@
+openapi: 3.0.0
+info:
+  title: API RESTful - E-commerce
+  version: 1.0.0
+  description: API RESTful para gerenciamento de e-commerce com autenticação JWT
+
+servers:
+  - url: http://localhost:5000
+    description: Servidor de desenvolvimento
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        email:
+          type: string
+        perfil:
+          type: string
+          enum: [ADMIN, USER]
+        data_criacao:
+          type: string
+          format: date-time
+        data_atualizacao:
+          type: string
+          format: date-time
+
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        email:
+          type: string
+        telefone:
+          type: string
+        endereco:
+          type: string
+        data_criacao:
+          type: string
+          format: date-time
+        data_atualizacao:
+          type: string
+          format: date-time
+
+    Produto:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        descricao:
+          type: string
+        preco:
+          type: number
+          format: float
+        quantidade_estoque:
+          type: integer
+        url_imagem:
+          type: string
+        data_criacao:
+          type: string
+          format: date-time
+        data_atualizacao:
+          type: string
+          format: date-time
+
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: integer
+        cliente_id:
+          type: integer
+        status:
+          type: string
+          enum: [PENDENTE, PROCESSANDO, ENVIADO, ENTREGUE, CANCELADO]
+        valor_total:
+          type: number
+          format: float
+        data_criacao:
+          type: string
+          format: date-time
+        data_atualizacao:
+          type: string
+          format: date-time
+
+    ItemPedido:
+      type: object
+      properties:
+        id:
+          type: integer
+        pedido_id:
+          type: integer
+        produto_id:
+          type: integer
+        quantidade:
+          type: integer
+        preco_unitario:
+          type: number
+          format: float
+
+    Login:
+      type: object
+      required:
+        - email
+        - senha
+      properties:
+        email:
+          type: string
+        senha:
+          type: string
+
+    Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Autenticação
+      summary: Autentica um usuário
+      description: Retorna um token JWT para autenticação
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Login bem sucedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Credenciais inválidas
+
+  /auth/register:
+    post:
+      tags:
+        - Autenticação
+      summary: Registra um novo usuário
+      description: Cria um novo usuário no sistema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Dados inválidos
+
+  /auth/me:
+    get:
+      tags:
+        - Autenticação
+      summary: Retorna dados do usuário logado
+      description: Retorna os dados do usuário autenticado
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Dados do usuário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '401':
+          description: Não autorizado
+
+  /clientes:
+    get:
+      tags:
+        - Clientes
+      summary: Lista todos os clientes
+      description: Retorna uma lista de todos os clientes
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+        '401':
+          description: Não autorizado
+
+    post:
+      tags:
+        - Clientes
+      summary: Cria um novo cliente
+      description: Cria um novo cliente no sistema
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cliente'
+      responses:
+        '201':
+          description: Cliente criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '400':
+          description: Dados inválidos
+        '401':
+          description: Não autorizado
+
+  /clientes/{id}:
+    get:
+      tags:
+        - Clientes
+      summary: Obtém um cliente por ID
+      description: Retorna os dados de um cliente específico
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados do cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          description: Cliente não encontrado
+        '401':
+          description: Não autorizado
+
+    put:
+      tags:
+        - Clientes
+      summary: Atualiza um cliente
+      description: Atualiza os dados de um cliente existente
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cliente'
+      responses:
+        '200':
+          description: Cliente atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          description: Cliente não encontrado
+        '401':
+          description: Não autorizado
+
+    delete:
+      tags:
+        - Clientes
+      summary: Remove um cliente
+      description: Remove um cliente do sistema
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Cliente removido com sucesso
+        '404':
+          description: Cliente não encontrado
+        '401':
+          description: Não autorizado
+
+  /produtos:
+    get:
+      tags:
+        - Produtos
+      summary: Lista todos os produtos
+      description: Retorna uma lista de todos os produtos
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'
+        '401':
+          description: Não autorizado
+
+    post:
+      tags:
+        - Produtos
+      summary: Cria um novo produto
+      description: Cria um novo produto no sistema
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+      responses:
+        '201':
+          description: Produto criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '400':
+          description: Dados inválidos
+        '401':
+          description: Não autorizado
+
+  /produtos/{id}:
+    get:
+      tags:
+        - Produtos
+      summary: Obtém um produto por ID
+      description: Retorna os dados de um produto específico
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados do produto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado
+        '401':
+          description: Não autorizado
+
+    put:
+      tags:
+        - Produtos
+      summary: Atualiza um produto
+      description: Atualiza os dados de um produto existente
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+      responses:
+        '200':
+          description: Produto atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado
+        '401':
+          description: Não autorizado
+
+    delete:
+      tags:
+        - Produtos
+      summary: Remove um produto
+      description: Remove um produto do sistema
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Produto removido com sucesso
+        '404':
+          description: Produto não encontrado
+        '401':
+          description: Não autorizado
+
+  /pedidos:
+    get:
+      tags:
+        - Pedidos
+      summary: Lista todos os pedidos
+      description: Retorna uma lista de todos os pedidos
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+        '401':
+          description: Não autorizado
+
+    post:
+      tags:
+        - Pedidos
+      summary: Cria um novo pedido
+      description: Cria um novo pedido no sistema
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+      responses:
+        '201':
+          description: Pedido criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '400':
+          description: Dados inválidos
+        '401':
+          description: Não autorizado
+
+  /pedidos/{id}:
+    get:
+      tags:
+        - Pedidos
+      summary: Obtém um pedido por ID
+      description: Retorna os dados de um pedido específico
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados do pedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '404':
+          description: Pedido não encontrado
+        '401':
+          description: Não autorizado
+
+    put:
+      tags:
+        - Pedidos
+      summary: Atualiza o status de um pedido
+      description: Atualiza o status de um pedido existente
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [PENDENTE, PROCESSANDO, ENVIADO, ENTREGUE, CANCELADO]
+      responses:
+        '200':
+          description: Status do pedido atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '404':
+          description: Pedido não encontrado
+        '401':
+          description: Não autorizado
+
+    delete:
+      tags:
+        - Pedidos
+      summary: Remove um pedido
+      description: Remove um pedido do sistema
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Pedido removido com sucesso
+        '404':
+          description: Pedido não encontrado
+        '401':
+          description: Não autorizado 
