@@ -7,6 +7,7 @@ Este projeto é uma API RESTful desenvolvida com **Flask (Python)** seguindo o p
 ## 📚 Sumário
 
 - [🔧 Tecnologias](#-tecnologias)  
+- [🏗️ Padrões de Projeto](#padroes-de-projeto)
 - [📁 Estrutura de Pastas](#-estrutura-de-pastas)  
 - [🚀 Como Executar](#-como-executar)  
 - [🔐 Autenticação e Autorização](#-autenticação-e-autorização)  
@@ -265,11 +266,9 @@ Cada usuário possui um perfil (por exemplo, **ADMIN** ou **USER**), e certas ro
 ---
 
 ## 🗂️ Diagrama Arquitetural
-
-> Insira aqui a imagem do diagrama UML/C4 (por exemplo, gerado no draw.io).
+![Diagrama Arquitetural](diagrama.png)
 
 ---
-
 ## 📄 Licença
 
 Este projeto está licenciado sob a **MIT License**.
