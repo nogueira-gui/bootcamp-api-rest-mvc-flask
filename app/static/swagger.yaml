@@ -381,6 +381,27 @@ paths:
         '401':
           description: Não autorizado
 
+  /clientes/contar:
+    get:
+      tags:
+        - Clientes
+      summary: Conta o total de clientes
+      description: Retorna o número total de clientes cadastrados
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Total de clientes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+        '401':
+          description: Não autorizado
+
   /produtos:
     get:
       tags:
@@ -501,6 +522,27 @@ paths:
           description: Produto removido com sucesso
         '404':
           description: Produto não encontrado
+        '401':
+          description: Não autorizado
+
+  /produtos/contar:
+    get:
+      tags:
+        - Produtos
+      summary: Conta o total de produtos
+      description: Retorna o número total de produtos cadastrados
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Total de produtos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
         '401':
           description: Não autorizado
 
@@ -628,5 +670,26 @@ paths:
           description: Pedido removido com sucesso
         '404':
           description: Pedido não encontrado
+        '401':
+          description: Não autorizado
+
+  /pedidos/contar:
+    get:
+      tags:
+        - Pedidos
+      summary: Conta o total de pedidos
+      description: Retorna o número total de pedidos cadastrados
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Total de pedidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
         '401':
           description: Não autorizado 
