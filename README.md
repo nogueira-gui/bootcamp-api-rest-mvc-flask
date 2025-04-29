@@ -24,6 +24,7 @@ Este projeto é uma API RESTful desenvolvida com **Flask (Python)** seguindo o p
 - Flask-JWT-Extended  
 - SQLAlchemy  
 - PostgreSQL  
+- Simple Storage Service (S3)
 - Docker e Docker Compose  
 
 ## 🏗️ Padrões de Projeto
@@ -144,15 +145,15 @@ O serviço S3 é integrado automaticamente ao gerenciamento de produtos, permiti
 │   ├── models/         # Modelos: definem as entidades de domínio
 │   ├── services/       # Serviços: lógica de negócio
 │   ├── repositories/   # Repositórios: abstração de acesso ao banco
-│   ├── auth/           # Módulo de autenticação e autorização
-│   ├── config/         # Configurações da aplicação
+│   ├── config/         # Config: arquivos de configuração da aplicação
+│   ├── static/         # Static: Arquivos estaticos para apresentação web
 │   └── __init__.py     # Inicialização da aplicação Flask
 ├── tests/              # Testes automatizados (unitários e integração)
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt    # Dependências Python
-├── README.md           # Documentação do projeto
-└── .env.example        # Variáveis de ambiente
+├── pytest.ini          # configurações de inicialização pytest
+└── README.md           # Documentação do projeto
 ```
 
 ---
@@ -212,6 +213,13 @@ Cada usuário possui um perfil (por exemplo, **ADMIN** ou **USER**), e certas ro
 ---
 
 ## 📌 Endpoints da API
+
+### 🧰 Documentação Swagger
+
+| Método | Rota            | Descrição                           | Protegida |
+|--------|-----------------|-------------------------------------|-----------|
+| POST   | `/docs`         | Swagger UI                          | ❌        |
+| POST   | `/swagger.yaml` | Download arquivo swagger.yaml       | ❌        |
 
 ### 🧾 Autenticação
 
